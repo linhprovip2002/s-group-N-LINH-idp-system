@@ -3,7 +3,6 @@ import { DataSource } from 'typeorm';
 import { DataSourceOptions } from 'typeorm/data-source/DataSourceOptions';
 import { databaseConfig } from '../database.config';
 
-
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 let config;
 switch (process.env.NODE_ENV) {
