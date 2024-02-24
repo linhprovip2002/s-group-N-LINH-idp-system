@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User1706412751363 } from './migrations/1706412751363-user';
-import { Book1707635652785 } from './migrations/1707635652785-book';
 
 @Module({
   imports: [
