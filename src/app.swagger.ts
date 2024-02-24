@@ -1,13 +1,15 @@
+import { UserEntity } from '@apis/user/entities/user.entity';
 import { INestApplication, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as packageJson from 'packageJson';
 
 export function useSwagger(app: INestApplication) {
   const logger = new Logger('Swagger');
   const port = process.env.PORT || 3000;
   const path = 'docs';
   const title = 'NestJS Boilerplate';
-  const version = '1.0';
-  const description = 'API Documentation';
+  const version = packageJson.version;
+  const description = packageJson.description;
 
   const config = new DocumentBuilder()
     .setTitle(title)
@@ -49,4 +51,4 @@ export function useSwagger(app: INestApplication) {
   );
 }
 
-const extraModels = [];
+const extraModels = [UserEntity];
