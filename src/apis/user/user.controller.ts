@@ -13,13 +13,13 @@ import {
 import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Public } from 'src/auth/globalAuth';
-import { PermissionGuard } from 'src/auth/guard.ts/permission.guard';
+import { Public } from 'src/common/constants';
+import { PermissionGuard } from 'src/apis/auth/guard.ts/permission.guard';
 
 @Controller('user')
 export class UserController {
 	constructor(private readonly userService: UsersService) {}
-	//@Public()
+	@Public()
 	@UseGuards(PermissionGuard)
 	@SetMetadata('permissions', ['create user'])
 	@Post()

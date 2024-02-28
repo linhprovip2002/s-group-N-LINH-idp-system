@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Permission } from './entities/permission.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UsersService } from 'src/user/user.service';
+import { UsersService } from 'src/apis/user/user.service';
 
 @Injectable()
 export class PermissionService {
@@ -50,7 +50,7 @@ export class PermissionService {
     return await this.permissionRepository.remove(permission);
   }
   async getPermissionByRolesName(roles: string[]) {
-    const permissions = [];
+    const permissions: string[] = []; // Assuming permission names are strings
 
     for (const roleName of roles) {
       const role = await this.roleService.findOneBy({
@@ -58,24 +58,16 @@ export class PermissionService {
         relations: ['permissions'],
       });
 
-      if (role) {
-        permissions.push(...role.permissions);
+      if (role && role.permissions) {
+        permissions.push(
+          ...role.permissions.map((permission) => permission.name),
+        );
       }
     }
 
-    return permissions.map((permission) => permission.name);
+    return permissions;
   }
-  // async getUserPermissionByID(userID: number) {
-  // 	const user = await this.userServices.findOneByID(userID);
-  // 	if (!user) {
-  // 		throw new NotFoundException('User not found');
-  // 	}
-  // 	const roles = user.roles;
-  // 	const permissions = await this.getPermissionByRolesName(
-  // 		roles.map((role) => role.name),
-  // 	);
-  // 	return permissions;
-  // }
+
   async assignPermission(roleID: number, permissionID: number[]) {
     const role = await this.roleService.findOne(roleID);
     if (!role) {

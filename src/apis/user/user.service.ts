@@ -73,14 +73,16 @@ export class UsersService {
   }
 
   async findOneByUsername(username: string): Promise<User | undefined> {
-    return this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { username: username },
       relations: ['roles'],
     });
+    return user ?? undefined; // Convert null to undefined
   }
 
   async findOneByID(ID: number): Promise<User | undefined> {
-    return this.userRepository.findOneBy({ id: ID });
+    const user = await this.userRepository.findOneBy({ id: ID });
+    return user ?? undefined; // Convert null to undefined
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

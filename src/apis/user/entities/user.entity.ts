@@ -1,4 +1,4 @@
-import { Role } from 'src/role/entities/role.entity';
+import { Role } from 'src/apis/role/entities/role.entity';
 import {
 	Column,
 	Entity,

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strictPropertyInitialization": false,
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -15,7 +16,7 @@
     "strictNullChecks": true,
     "strict": true,
     "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
+    // "strictPropertyInitialization": true,
     "noImplicitAny": false,
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": false,
