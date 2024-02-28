@@ -1,4 +1,3 @@
-import { UserEntity } from '@apis/user/entities/user.entity';
 import { INestApplication, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as packageJson from 'packageJson';
@@ -51,4 +50,4 @@ export function useSwagger(app: INestApplication) {
   );
 }
 
-const extraModels = [UserEntity];
+const extraModels = [];

@@ -1,29 +1,15 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
-import { CreateUserHandler } from './handlers/create-user.handler';
-import { GetAllUserPaginatedHandler } from './handlers/get-all-user-paginated.handler';
-import { GetOneUserByIdHandler } from './handlers/get-one-user-by-id.handler';
-import { RemoveUserByIdHandler } from './handlers/remove-user-by-id.handler';
-import { UpdateUserByIdHandler } from './handlers/update-user-by-id.handler';
+import { UsersService } from './user.service';
 import { UserController } from './user.controller';
-import { IUserService } from './user.interface';
-import { UserService } from './user.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Role } from 'src/role/entities/role.entity';
+import { CacheService } from 'src/cache/cache.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
-  controllers: [UserController],
-  providers: [
-    {
-      provide: IUserService,
-      useClass: UserService,
-    },
-    CreateUserHandler,
-    GetAllUserPaginatedHandler,
-    GetOneUserByIdHandler,
-    RemoveUserByIdHandler,
-    UpdateUserByIdHandler,
-  ],
-  exports: [IUserService],
+	imports: [TypeOrmModule.forFeature([User, Role])],
+	controllers: [UserController],
+	providers: [UsersService, CacheService],
+	exports: [UsersService],
 })
 export class UserModule {}

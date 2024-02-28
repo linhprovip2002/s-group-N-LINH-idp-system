@@ -1,68 +1,59 @@
 import {
-  ApiController,
-  ApiCreate,
-  ApiDelete,
-  ApiGetAll,
-  ApiGetOne,
-  ApiUpdate,
-  PaginationDto,
-} from '@common';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
+	Controller,
+	Get,
+	Post,
+	Body,
+	Patch,
+	Param,
+	Delete,
+	SetMetadata,
+	UseGuards,
+	Query,
 } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
-import { CreateUserCommand } from './commands/create-user.command';
-import { GetAllUserPaginatedCommand } from './commands/get-all-user-paginated.command';
-import { GetOneUserByIdCommand } from './commands/get-one-user-by-id.command';
-import { RemoveUserByIdCommand } from './commands/remove-user-by-id.command';
-import { UpdateUserByIdCommand } from './commands/update-user-by-id.command';
+import { UsersService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserByIdDto } from './dto/update-user-by-id.dto';
-import { UserEntity } from './entities/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { Public } from 'src/auth/globalAuth';
+import { PermissionGuard } from 'src/auth/guard.ts/permission.guard';
 
 @Controller('user')
-@ApiController('User')
 export class UserController {
-  constructor(private readonly commandBus: CommandBus) {}
-
-  @Post()
-  @ApiCreate(UserEntity, 'User')
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.commandBus.execute(
-      new CreateUserCommand({ data: createUserDto }),
-    );
-  }
-
-  @Get()
-  @ApiGetAll(UserEntity, 'User')
-  getAll(@Query() query: PaginationDto) {
-    return this.commandBus.execute(new GetAllUserPaginatedCommand({ query }));
-  }
-
-  @Get(':id')
-  @ApiGetOne(UserEntity, 'User')
-  getOne(@Param('id') id: string) {
-    return this.commandBus.execute(new GetOneUserByIdCommand({ id }));
-  }
-
-  @Patch(':id')
-  @ApiUpdate(UserEntity, 'User')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserByIdDto) {
-    return this.commandBus.execute(
-      new UpdateUserByIdCommand({ id, data: updateUserDto }),
-    );
-  }
-
-  @Delete(':id')
-  @ApiDelete(UserEntity, 'User')
-  remove(@Param('id') id: string) {
-    return this.commandBus.execute(new RemoveUserByIdCommand({ id }));
-  }
+	constructor(private readonly userService: UsersService) {}
+	//@Public()
+	@UseGuards(PermissionGuard)
+	@SetMetadata('permissions', ['create user'])
+	@Post()
+	create(@Body() createUserDto: CreateUserDto) {
+		return this.userService.create(createUserDto);
+	}
+	@UseGuards(PermissionGuard)
+	@SetMetadata('permissions', ['read user'])
+	// @Public()
+	@Get()
+	findAll(
+		@Query('page') page: number,
+		@Query('limit') limit: number,
+		@Query('search') search: string,
+		@Query('sort') sort: string,
+	) {
+		return this.userService.findAll(page, limit, search, sort);
+	}
+	@UseGuards(PermissionGuard)
+	@SetMetadata('permissions', ['read user'])
+	@Get(':id')
+	findOne(@Param('id') id: number) {
+		return this.userService.findOneByID(id);
+	}
+	@UseGuards(PermissionGuard)
+	@SetMetadata('permissions', ['update user'])
+	@Patch(':id')
+	update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+		return this.userService.update(+id, updateUserDto);
+	}
+	@UseGuards(PermissionGuard)
+	@SetMetadata('permissions', ['delete user'])
+	@Delete(':id')
+	remove(@Param('id') id: string) {
+		return this.userService.remove(+id);
+	}
 }

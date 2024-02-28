@@ -1,12 +1,9 @@
-export const EventKey = {};
-
-export const MetadataKey = {
-  REDIS: 'REDIS',
-  NODEMAILER: 'NODEMAILER',
-  CHECK_SUBSCRIPTION: 'CHECK_SUBSCRIPTION',
-  ALLOWED_ENV: 'ALLOWED_ENV',
+export const secretKey = 'secretKey';
+export const jwtConstants = {
+  secret: secretKey,
 };
 
-export const BULL_QUEUE_KEY = {
-  BULL: 'BULL',
-};
+import { SetMetadata } from '@nestjs/common';
+
+export const IS_PUBLIC_KEY = 'isPublic';
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
